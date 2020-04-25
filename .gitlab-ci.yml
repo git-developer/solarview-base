@@ -22,20 +22,18 @@ Download Dockerfile:
 Collect Additional Tags:
   extends: .docker_support:.with_bare_image
   stage: analyze
-  dependencies:
-  - Build Image
   artifacts:
     paths:
     - tags
   script:
   - set -euo pipefail
   - mkdir -p tags
-  - run() { docker run --rm "${CI_PROJECT_PATH}:${BUILD_CACHE}" sh -c "${@}"; }
+  - run() { docker run --rm "${IMAGE_NAME}:${BUILD_CACHE}" sh -c "${@}"; }
   - APP_VERSION="$(run '"${APP_HOME}/${APP_NAME}" -v' | sed -n -E 's/.* V ([^\t ]+).*/\1/p')"
   - APP_DATE="$(run 'stat -L -c %y "${APP_HOME}/${APP_NAME}"' | cut -d ' ' -f 1)"
   - BUILD_ID="$(date -u +%Y%m%d_%H%M%S)-${IMAGE_REVISION:-${CI_COMMIT_SHA}}-$(shuf -e -n8 {0..9} | xargs | tr -d ' ')"
   - RELEASE_DATE="$(run 'cat ${APP_HOME}/.release_date' | cut -d ' ' -f 1)"
-  - echo >tags/app_version "${CI_PROJECT_PATH}:v${APP_VERSION}"
-  - echo >tags/app_date "${CI_PROJECT_PATH}:${APP_DATE}"
-  - echo >tags/build_id "${CI_PROJECT_PATH}:b${BUILD_ID}"
-  - test "${APP_DATE}" = "${RELEASE_DATE}" || echo >tags/release_date "${CI_PROJECT_PATH}:r${RELEASE_DATE}"
+  - echo >tags/app_version "${IMAGE_NAME}:v${APP_VERSION}"
+  - echo >tags/app_date "${IMAGE_NAME}:${APP_DATE}"
+  - echo >tags/build_id "${IMAGE_NAME}:b${BUILD_ID}"
+  - test "${APP_DATE}" = "${RELEASE_DATE}" || echo >tags/release_date "${IMAGE_NAME}:r${RELEASE_DATE}"
