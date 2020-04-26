@@ -43,5 +43,4 @@ Collect Additional Tags:
 
   - oci='org.opencontainers.image'
   - mkdir -p labels
-  - echo >"labels/${oci}.title"    "${oci}.title=${IMAGE_TITLE:-${IMAGE_NAME}:${APP_VERSION}}"
   - echo >"labels/${oci}.version"  "${oci}.version=${APP_VERSION}"
