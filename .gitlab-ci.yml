@@ -24,7 +24,7 @@ Collect Additional Tags:
   stage: analyze
   artifacts:
     paths:
-    - tags/*
+    - tags
   script:
   - set -euo pipefail
   - mkdir -p tags
