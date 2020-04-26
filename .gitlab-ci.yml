@@ -24,7 +24,7 @@ Collect Additional Tags:
   stage: analyze
   artifacts:
     paths:
-    - tags/analyze/*
+    - tags/*
   script:
   - set -euo pipefail
   - mkdir -p tags
@@ -33,7 +33,7 @@ Collect Additional Tags:
   - APP_DATE="$(run 'stat -L -c %y "${APP_HOME}/${APP_NAME}"' | cut -d ' ' -f 1)"
   - BUILD_ID="$(date -u +%Y%m%d_%H%M%S)-${IMAGE_REVISION:-${CI_COMMIT_SHORT_SHA}}-$(od -An -N5 -tu4 </dev/urandom | tr -d ' ' | head -c8)"
   - RELEASE_DATE="$(run 'cat ${APP_HOME}/.release_date' | cut -d ' ' -f 1)"
-  - echo >tags/analyze/app_version "${IMAGE_NAME}:v${APP_VERSION}"
-  - echo >tags/analyze/app_date "${IMAGE_NAME}:${APP_DATE}"
-  - echo >tags/analyze/build_id "${IMAGE_NAME}:b${BUILD_ID}"
-  - test "${APP_DATE}" = "${RELEASE_DATE}" || echo >tags/analyze/release_date "${IMAGE_NAME}:r${RELEASE_DATE}"
+  - echo >tags/app_version "${IMAGE_NAME}:v${APP_VERSION}"
+  - echo >tags/app_date "${IMAGE_NAME}:${APP_DATE}"
+  - echo >tags/build_id "${IMAGE_NAME}:b${BUILD_ID}"
+  - test "${APP_DATE}" = "${RELEASE_DATE}" || echo >tags/release_date "${IMAGE_NAME}:r${RELEASE_DATE}"
