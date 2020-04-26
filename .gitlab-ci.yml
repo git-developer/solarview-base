@@ -27,7 +27,7 @@ Collect Additional Tags:
     - tags/analyze/*
   script:
   - set -euo pipefail
-  - mkdir -p tags/analyze
+  - mkdir -p tags
   - run() { docker run --rm "${IMAGE_NAME}:${BUILD_CACHE}" sh -c "${@}"; }
   - APP_VERSION="$(run '"${APP_HOME}/${APP_NAME}" -v' | sed -n -E 's/.* V ([^\t ]+).*/\1/p')"
   - APP_DATE="$(run 'stat -L -c %y "${APP_HOME}/${APP_NAME}"' | cut -d ' ' -f 1)"
