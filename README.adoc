@@ -1,0 +1,30 @@
+= SolarView Base
+Support to build Docker images for SolarView
+
+== Description
+This project contains files to support building Docker images for http://www.solarview.info/solarview_linux.aspx[SolarView] and its proxy applications.
+
+== Usage
+1. Create a GitLab CI configuration for the SolarView application. Suppose we want to build a Docker image for a SolarView proxy _foo-fb_:
++
+..gitlab-ci.yml
+[source,yaml]
+----
+include:
+  remote: 'https://github.com/git-developer/solarview-base/raw/v1.0.0/.gitlab-ci.yml'
+
+variables:
+  DOCKERFILE_URL: 'https://github.com/git-developer/solarview-base/raw/v1.0.0/Dockerfile'
+  BUILD_ARGS: 'APP_NAME=foo-fb'
+  IMAGE_TITLE: 'SolarView foo-Proxy'
+----
+1. Build the project with GitLab CI.
+
+The build will create Docker images for the platforms `linux/i386` and `linux/arm/v7`, add labels, tag them with version and date and publish them to the Docker registry.
+
+== References
+* http://www.solarview.info/solarview_linux.aspx[SolarView]
+* Examples:
+** https://github.com/git-developer/solarview-linux/[solarview-linux]
+** https://github.com/git-developer/solarview-steca/[solarview-steca]
+** https://github.com/git-developer/solarview-d0/[solarview-d0]
