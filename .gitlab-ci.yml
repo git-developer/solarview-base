@@ -1,17 +1,11 @@
 include:
-  remote: "https://github.com/git-developer/docker-support/raw/v2.1.0/gitlab-ci/docker-template.yml"
+  remote: "https://github.com/git-developer/docker-support/raw/v3.0.0/gitlab-ci/docker-template.yml"
 
 variables:
   IMAGE_PLATFORMS: 'linux/i386,linux/arm/v7'
 
-stages:
-  - setup
-  - prepare
-  - analyze
-  - publish
-
-Download Dockerfile:
-  stage: setup
+download_dockerfile:
+  stage: post_checkout
   image: busybox
   artifacts:
     paths:
@@ -19,9 +13,9 @@ Download Dockerfile:
   script:
   - test -z "${DOCKERFILE_URL}" || { mkdir -p image && wget -q -O image/Dockerfile "${DOCKERFILE_URL}"; }
 
-Collect Additional Tags:
+read_application_tags:
   extends: .docker_support:.with_bare_image
-  stage: analyze
+  stage: post_build
   artifacts:
     paths:
     - tags
