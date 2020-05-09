@@ -14,6 +14,11 @@ download_dockerfile:
   script:
   - test -z "${DOCKERFILE_URL}" || { mkdir -p image && wget -q -O image/Dockerfile "${DOCKERFILE_URL}"; }
 
+build_image:
+  dependencies:
+  - prepare_build_arguments
+  - download_dockerfile
+
 read_application_tags:
   extends: .docker_support:.with_bare_image
   stage: post_build
