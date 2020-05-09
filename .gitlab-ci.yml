@@ -5,6 +5,7 @@ variables:
   IMAGE_PLATFORMS: 'linux/i386,linux/arm/v7'
 
 download_dockerfile:
+  extends: .docker_support:.build_job
   stage: post_checkout
   image: busybox
   artifacts:
