@@ -22,7 +22,7 @@ variables:
 1. Build the project with GitLab CI.
 1. Optional: to enable the update-check and build automatically on SolarView updates, create a GitLab pipeline schedule with variable `PIPELINE_MODE` set to `update-check`.
 
-The build will create Docker images for the platforms `linux/i386` and `linux/arm/v7`, add labels, tag them with version and date and publish them to the Docker registry.
+The build will create Docker images for the platforms `linux/i386` and `linux/arm/v6`, add labels, tag them with version and date and publish them to the Docker registry.
 
 == References
 * http://www.solarview.info/solarview_linux.aspx[SolarView]
