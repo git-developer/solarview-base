@@ -48,7 +48,7 @@ ENV APP_HOME="/opt/${APP_NAME}"
 ENV APP_RUNTIME="/var/opt/${APP_NAME}"
 COPY --from=builder "${APP_HOME}" "${APP_HOME}"
 RUN if [ "${TARGETARCH:-$(arch)}" = 'amd64' ]; then \
-      apt-get update && apt-get install -y libc6-i386 && apt-get clean \
+      apt-get update && apt-get install -y libc6-i386 && apt-get clean; \
     fi
 WORKDIR "${APP_RUNTIME}"
 
