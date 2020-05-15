@@ -58,5 +58,5 @@ WORKDIR "${APP_RUNTIME}"
 # newer, it is not overwritten. This technique allows to update the binaries and
 # keep the user data without a special update mechanism.
 #
-CMD  [ "/bin/sh", "-c", "cp -u -a \"${APP_HOME}\"/* \"${APP_RUNTIME}/\" && exec \"./${APP_NAME}\" ${ARGS} -nofork" ]
+CMD  [ "/bin/sh", "-c", "cp -u -a \"${APP_HOME}\"/* \"${APP_RUNTIME}/\" && \"./${APP_NAME}\" ${ARGS} && exec tail -f /dev/null" ]
 VOLUME "${APP_RUNTIME}"
