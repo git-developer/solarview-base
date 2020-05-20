@@ -5,7 +5,7 @@
 # stores the release date and selects the correct binaries for the architecture.
 # The second image prepares runtime dependencies and defines the start command.
 #
-ARG RUNTIME_BASE_IMAGE=debian:stable-slim
+ARG RUNTIME_BASE_IMAGE=alpine
 
 # builder image, prepares the runtime image
 FROM alpine AS builder
