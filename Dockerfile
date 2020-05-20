@@ -6,6 +6,7 @@
 # The second image prepares runtime dependencies and defines the start command.
 #
 ARG RUNTIME_BASE_IMAGE=alpine
+ARG GLIBC_VERSION=2.31-r0
 
 # builder image, prepares the runtime image
 FROM alpine AS builder
@@ -43,11 +44,15 @@ RUN [ -z "${APP_BINARIES}" ] || { \
 # runtime image
 FROM ${RUNTIME_BASE_IMAGE} AS runtime
 ARG APP_NAME
+ARG GLIBC_VERSION
 ENV APP_NAME="${APP_NAME}"
 ENV APP_HOME="/opt/${APP_NAME}"
 ENV APP_RUNTIME="/var/opt/${APP_NAME}"
 COPY --from=builder "${APP_HOME}" "${APP_HOME}"
-RUN apk add libc6-compat
+RUN wget -q -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub && \
+    wget -q https://github.com/sgerrand/alpine-pkg-glibc/releases/download/${GLIBC_VERSION}/glibc-${GLIBC_VERSION}.apk && \
+    apk add glibc-${GLIBC_VERSION}.apk && \
+    rm /etc/apk/keys/sgerrand.rsa.pub glibc-${GLIBC_VERSION}.apk
 WORKDIR "${APP_RUNTIME}"
 
 #
