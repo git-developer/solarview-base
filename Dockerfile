@@ -55,7 +55,7 @@ RUN if [ "${TARGETARCH:-$(arch)}" = 'amd64' ]; then \
       apk add glibc-${GLIBC_VERSION}.apk && \
       rm /etc/apk/keys/sgerrand.rsa.pub glibc-${GLIBC_VERSION}.apk \
     else \
-      apk add libc6-compat \
+      apk add libc6-compat; \
     fi
 WORKDIR "${APP_RUNTIME}"
 
