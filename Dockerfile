@@ -47,6 +47,7 @@ ENV APP_NAME="${APP_NAME}"
 ENV APP_HOME="/opt/${APP_NAME}"
 ENV APP_RUNTIME="/var/opt/${APP_NAME}"
 COPY --from=builder "${APP_HOME}" "${APP_HOME}"
+RUN apk add libc6-compat
 WORKDIR "${APP_RUNTIME}"
 
 #
