@@ -26,11 +26,12 @@ RUN stat -c %y "${APP_ARCHIVE_FILE}" >.release_date
 RUN [ -z "${APP_BINARIES}" ] || { \
       target_arch="${TARGETARCH:-$(arch)}" && \
       case "${target_arch}" in \
-        386|amd64) sv_arch=x86  ;; \
-        arm*)      sv_arch=rpi  ;; \
-        mips)      sv_arch=7390 ;; \
-        mipsel)    sv_arch=71xx ;; \
-        *)         echo >&2 "Unsupported architecture: ${target_arch}" && exit 1;; \
+        amd64)  sv_arch=x64  ;; \
+        386)    sv_arch=x86  ;; \
+        arm*)   sv_arch=rpi  ;; \
+        mips)   sv_arch=7390 ;; \
+        mipsel) sv_arch=71xx ;; \
+        *)      echo >&2 "Unsupported architecture: ${target_arch}" && exit 1;; \
       esac && \
       for binary in ${APP_BINARIES}; do \
         mv "${binary}" "${binary}.71xx" && \
@@ -47,9 +48,6 @@ ENV APP_NAME="${APP_NAME}"
 ENV APP_HOME="/opt/${APP_NAME}"
 ENV APP_RUNTIME="/var/opt/${APP_NAME}"
 COPY --from=builder "${APP_HOME}" "${APP_HOME}"
-RUN if [ "${TARGETARCH:-$(arch)}" = 'amd64' ]; then \
-      apt-get update && apt-get install -y libc6-i386 && apt-get clean; \
-    fi
 WORKDIR "${APP_RUNTIME}"
 
 #
