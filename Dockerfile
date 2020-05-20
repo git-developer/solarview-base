@@ -42,7 +42,6 @@ RUN [ -z "${APP_BINARIES}" ] || { \
 
 # runtime image
 FROM ${RUNTIME_BASE_IMAGE} AS runtime
-ARG TARGETARCH
 ARG APP_NAME
 ENV APP_NAME="${APP_NAME}"
 ENV APP_HOME="/opt/${APP_NAME}"
