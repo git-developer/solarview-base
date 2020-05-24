@@ -47,6 +47,11 @@ ENV APP_NAME="${APP_NAME}"
 ENV APP_HOME="/opt/${APP_NAME}"
 ENV APP_RUNTIME="/var/opt/${APP_NAME}"
 COPY --from=builder "${APP_HOME}" "${APP_HOME}"
+# rpi binaries are linked against ld-linux-armhf.so.3
+# which does not exist on debian arm/v6 (armel)
+RUN case "${TARGETARCH:-$(arch)}" in \
+      arm*) [ -e /lib/ld-linux-armhf.so.3 ] || [ ! -h /lib/ld-linux.so.3 ] || ln -s "$(realpath /lib/ld-linux.so.3)" /lib/ld-linux-armhf.so.3 ;; \
+    esac
 WORKDIR "${APP_RUNTIME}"
 
 #
