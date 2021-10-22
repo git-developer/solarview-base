@@ -5,7 +5,7 @@
 # stores the release date and selects the correct binaries for the architecture.
 # The second image prepares runtime dependencies and defines the start command.
 #
-ARG RUNTIME_BASE_IMAGE=debian:testing-slim
+ARG RUNTIME_BASE_IMAGE=debian:stable-slim
 
 # builder image, prepares the runtime image
 FROM alpine AS builder
@@ -26,11 +26,12 @@ RUN stat -c %y "${APP_ARCHIVE_FILE}" >.release_date
 RUN [ -z "${APP_BINARIES}" ] || { \
       target_arch="${TARGETARCH:-$(arch)}" && \
       case "${target_arch}" in \
-        amd64)  sv_arch=x64  ;; \
-        386)    sv_arch=x86  ;; \
-        arm*)   sv_arch=rpi  ;; \
-        mips)   sv_arch=7390 ;; \
-        mipsel) sv_arch=71xx ;; \
+        amd64)  sv_arch=x64   ;; \
+        386)    sv_arch=x86   ;; \
+        arm64)  sv_arch=rpi64 ;; \
+        arm*)   sv_arch=rpi   ;; \
+        mips)   sv_arch=7390  ;; \
+        mipsel) sv_arch=71xx  ;; \
         *)      echo >&2 "Unsupported architecture: ${target_arch}" && exit 1;; \
       esac && \
       for binary in ${APP_BINARIES}; do \
