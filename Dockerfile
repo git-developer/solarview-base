@@ -39,7 +39,7 @@ RUN [ -z "${APP_BINARIES}" ] || { \
         *)      echo >&2 "Unsupported architecture: ${target_arch}" && exit 1;; \
       esac && \
       for binary in ${APP_BINARIES}; do \
-        mv "${binary}" "${binary}.71xx" && \
+        { [ ! -e "${binary}" ] || mv "${binary}" "${binary}.71xx"; } && \
         chmod +x "${binary}.${sv_arch}" && \
         ln -s "${binary}.${sv_arch}" "${binary}"; \
       done \
