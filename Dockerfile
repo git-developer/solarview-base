@@ -15,6 +15,7 @@ ARG RUNTIME_BASE_IMAGE=debian:buster-slim
 FROM alpine AS builder
 ARG TARGETARCH
 ARG APP_NAME
+ARG I386_REQUIRED
 RUN test -n "${APP_NAME}" || { echo >&2 "Missing build-arg: APP_NAME"; exit 1; }
 ARG APP_ARCHIVE_URL="http://www.solarview.info/downloads/${APP_NAME}.zip"
 ARG APP_ARCHIVE_FILE="/build/${APP_NAME}.zip"
@@ -30,7 +31,7 @@ RUN stat -c %y "${APP_ARCHIVE_FILE}" >.release_date
 RUN [ -z "${APP_BINARIES}" ] || { \
       target_arch="${TARGETARCH:-$(arch)}" && \
       case "${target_arch}" in \
-        amd64)  sv_arch=x64   ;; \
+        amd64)  [ "${I386_REQUIRED:-false}" = "true" ] && sv_arch=x86 || sv_arch=x64 ;; \
         386)    sv_arch=x86   ;; \
         arm64)  sv_arch=rpi64 ;; \
         arm*)   sv_arch=rpi   ;; \
@@ -39,15 +40,24 @@ RUN [ -z "${APP_BINARIES}" ] || { \
         *)      echo >&2 "Unsupported architecture: ${target_arch}" && exit 1;; \
       esac && \
       for binary in ${APP_BINARIES}; do \
-        { [ ! -e "${binary}" ] || mv "${binary}" "${binary}.71xx"; } && \
-        chmod +x "${binary}.${sv_arch}" && \
-        ln -s "${binary}.${sv_arch}" "${binary}"; \
-      done \
+        if [ -f "${binary}" ]; then \
+          mv "${binary}" "${binary}.71xx" && \
+          ln -s "${binary}.${sv_arch}" "${binary}" ;\
+        elif [ -d "${binary}" ]; then \
+          mv "${binary}" Andere && \
+          mkdir -p Andere/71xx && \
+          find Andere -maxdepth 1 -type f -exec mv -t Andere/71xx '{}' + && \
+          find "Andere/${sv_arch}" -mindepth 1 -exec ln -s '{}' \; ;\
+        fi && \
+        if [ -e "${binary}" ]; then chmod +x "${binary}"; fi ;\
+      done ;\
     }
 
 # runtime image
 FROM ${RUNTIME_BASE_IMAGE} AS runtime
+ARG TARGETARCH
 ARG APP_NAME
+ARG I386_REQUIRED
 ENV APP_NAME="${APP_NAME}"
 ENV APP_HOME="/opt/${APP_NAME}"
 ENV APP_RUNTIME="/var/opt/${APP_NAME}"
@@ -55,7 +65,8 @@ COPY --from=builder "${APP_HOME}" "${APP_HOME}"
 # rpi binaries are linked against ld-linux-armhf.so.3
 # which does not exist on debian arm/v6 (armel)
 RUN case "${TARGETARCH:-$(arch)}" in \
-      arm*) [ -e /lib/ld-linux-armhf.so.3 ] || [ ! -h /lib/ld-linux.so.3 ] || ln -s "$(realpath /lib/ld-linux.so.3)" /lib/ld-linux-armhf.so.3 ;; \
+      arm*)  [ -e /lib/ld-linux-armhf.so.3 ] || [ ! -h /lib/ld-linux.so.3 ] || ln -s "$(realpath /lib/ld-linux.so.3)" /lib/ld-linux-armhf.so.3 ;; \
+      amd64) if [ "${I386_REQUIRED:-false}" = "true" ]; then apt-get update && apt-get install -y libc6-i386 && apt-get clean; fi ;; \
     esac
 WORKDIR "${APP_RUNTIME}"
 
