@@ -53,7 +53,8 @@ assert_app_can_run:
   - |
     per_platform() {
       echo "${IMAGE_PLATFORMS}" | tr ',' '\n' | while read -r platform; do
-        docker run --rm --platform "${platform}" --pull always "${IMAGE_NAME}:${BUILD_CACHE}" sh -c "${@}"
+        echo "Platform: ${platform}"
+        docker run --rm --platform "${platform}" "${IMAGE_NAME}:${BUILD_CACHE}" sh -c "${@}"
       done
     }
   - per_platform '"${APP_HOME}/${APP_NAME}" -v'
