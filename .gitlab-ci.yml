@@ -1,5 +1,5 @@
 include:
-  remote: "https://github.com/git-developer/docker-support/raw/v3.1.0/gitlab-ci/docker-template.yml"
+  remote: "https://github.com/git-developer/docker-support/raw/v3.2.0/gitlab-ci/docker-template.yml"
 
 variables:
   IMAGE_PLATFORMS: 'linux/amd64,linux/i386,linux/arm64,linux/arm/v7,linux/arm/v6'
@@ -44,3 +44,16 @@ read_application_tags:
   - oci='org.opencontainers.image'
   - mkdir -p labels
   - echo >"labels/${oci}.version"  "${oci}.version=${APP_VERSION}"
+
+assert_app_can_run:
+  extends: .docker_support:.with_bare_image
+  stage: test
+  script:
+  - set -euo pipefail
+  - |
+    per_platform() {
+      echo "${IMAGE_PLATFORMS}" | tr ',' '\n' | while read -r platform; do
+        docker run --rm --platform "${platform}" --pull always "${IMAGE_NAME}:${BUILD_CACHE}" sh -c "${@}"
+      done
+    }
+  - per_platform '"${APP_HOME}/${APP_NAME}" -v'
