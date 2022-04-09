@@ -21,7 +21,7 @@ build_image:
 
 read_application_tags:
   extends: .docker_support:.with_bare_image
-  stage: post_build
+  stage: post_test
   artifacts:
     paths:
     - tags
