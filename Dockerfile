@@ -57,11 +57,13 @@ RUN [ -z "${APP_BINARIES}" ] || { \
 FROM ${RUNTIME_BASE_IMAGE} AS runtime
 ARG TARGETARCH
 ARG APP_NAME
+ARG APP_PACKAGES
 ARG I386_REQUIRED
 ENV APP_NAME="${APP_NAME}"
 ENV APP_HOME="/opt/${APP_NAME}"
 ENV APP_RUNTIME="/var/opt/${APP_NAME}"
 COPY --from=builder "${APP_HOME}" "${APP_HOME}"
+RUN if [ "${APP_PACKAGES}" ]; then apt-get update && apt-get install -y ${APP_PACKAGES} && apt-get clean; fi
 # rpi binaries are linked against ld-linux-armhf.so.3
 # which does not exist on debian arm/v6 (armel)
 RUN case "${TARGETARCH:-$(arch)}" in \
