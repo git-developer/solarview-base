@@ -40,8 +40,8 @@ RUN [ -z "${APP_BINARIES}" ] || { \
         *)      echo >&2 "Unsupported architecture: ${target_arch}" && exit 1;; \
       esac && \
       for binary in ${APP_BINARIES}; do \
-        if [ -f "${binary}" ]; then \
-          mv "${binary}" "${binary}.71xx" && \
+        if [ -f "${binary}.${sv_arch}" ]; then \
+          if [ -f "${binary}" ]; then mv "${binary}" "${binary}.71xx"; fi && \
           ln -s "${binary}.${sv_arch}" "${binary}" ;\
         elif [ -d "${binary}" ]; then \
           mv "${binary}" Andere && \
