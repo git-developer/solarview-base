@@ -30,7 +30,7 @@ read_application_tags:
   - set -euo pipefail
   - run() { docker run --rm "${IMAGE_NAME}:${BUILD_CACHE}" sh -c "${@}"; }
 
-  - if run '</etc/os-release grep -q buster'; then if [ "${IMAGE_PLATFORMS}" = "linux/arm/v6" ]; then PREFIX="eol-"; else PREFIX="legacy-"; fi; fi
+  - if run 'grep -q buster /etc/os-release'; then if [ "${IMAGE_PLATFORMS}" = "linux/arm/v6" ]; then PREFIX="eol-"; else PREFIX="legacy-"; fi; fi
   - APP_VERSION="${PREFIX-}$(run '"${APP_HOME}/${APP_NAME}" -v' | sed -n -E 's/.* V(ersion)? ([^\t ]+).*/\2/p')"
   - APP_DATE="${PREFIX-}$(run 'stat -L -c %y "${APP_HOME}/${APP_NAME}"' | cut -d ' ' -f 1)"
   - RELEASE_DATE="${PREFIX-}$(run 'cat ${APP_HOME}/.release_date' | cut -d ' ' -f 1)"
