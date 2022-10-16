@@ -13,9 +13,9 @@ run_matrix_build:
   extends: .docker_support:.build_job
   stage: post_checkout
   trigger:
-    include: .build.yml
+    include:
     # required due to https://gitlab.com/gitlab-org/gitlab/-/issues/219342
-    - remote: 'https://github.com/git-developer/solarview-base/raw/feature/buster/.gitlab-ci.yml'
+    - remote: 'https://github.com/git-developer/solarview-base/raw/feature/buster/.build.yml'
     forward:
       pipeline_variables: true
   parallel:
