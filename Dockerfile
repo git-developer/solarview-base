@@ -8,8 +8,9 @@
 
 # 'buster' is preferred over 'stable' because bullseye requires at least
 # libseccomp 2.4.2 on the host; for details, see
-# https://github.com/debuerreotype/docker-debian-artifacts/issues/106#issuecomment-721887305
-# 'buster-20220801' is the latest buster for arm/v5
+#   https://github.com/debuerreotype/docker-debian-artifacts/issues/106#issuecomment-721887305
+# 'buster-20220801-slim' is the latest slim buster for arm/v5; for details, see
+#   https://github.com/debuerreotype/docker-debian-artifacts/issues/170
 ARG RUNTIME_BASE_IMAGE=debian:buster-20220801-slim
 # builder image, prepares the runtime image
 FROM alpine AS builder
