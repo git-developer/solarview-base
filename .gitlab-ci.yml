@@ -21,14 +21,8 @@ run_matrix_build:
   parallel:
     matrix:
       - RUNTIME_BASE_IMAGE: "debian:bullseye-slim"
-        BUILD_ARGS:         "RUNTIME_BASE_IMAGE"
-        BUILD_CONTEXT:      "image"
         IMAGE_PLATFORMS:    "linux/amd64,linux/arm64,linux/arm/v7,linux/arm/v6"
       - RUNTIME_BASE_IMAGE: "debian:buster-slim"
-        BUILD_ARGS:         "RUNTIME_BASE_IMAGE"
-        BUILD_CONTEXT:      "image"
         IMAGE_PLATFORMS:    "linux/amd64,linux/arm64,linux/arm/v7"
       - RUNTIME_BASE_IMAGE: "debian:buster-20220801-slim"
-        BUILD_ARGS:         "RUNTIME_BASE_IMAGE"
-        BUILD_CONTEXT:      "image"
         IMAGE_PLATFORMS:    "linux/arm/v6"
