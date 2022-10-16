@@ -1,0 +1,47 @@
+include:
+  remote: "https://github.com/git-developer/docker-support/raw/v3.3.1/gitlab-ci/docker-template.yml"
+
+variables:
+  IMAGE_PLATFORMS: 'linux/amd64,linux/i386,linux/arm64,linux/arm/v7,linux/arm/v6'
+
+download_dockerfile:
+  extends: .docker_support:.build_job
+  stage: post_checkout
+  image: busybox
+  artifacts:
+    paths:
+    - image
+  script:
+  - test -z "${DOCKERFILE_URL}" || { mkdir -p image && wget -q -O image/Dockerfile "${DOCKERFILE_URL}"; }
+
+build_image:
+  dependencies:
+  - prepare_build_arguments
+  - download_dockerfile
+
+read_application_tags:
+  extends: .docker_support:.with_bare_image
+  stage: post_build
+  artifacts:
+    paths:
+    - tags
+    - labels
+  script:
+  - set -euo pipefail
+  - run() { docker run --rm "${IMAGE_NAME}:${BUILD_CACHE}" sh -c "${@}"; }
+
+  - if run '</etc/os-release grep -q buster'; then if [ "${IMAGE_PLATFORMS}" = "linux/arm/v6" ]; then PREFIX="eol-"; else PREFIX="legacy-"; fi
+  - APP_VERSION="${PREFIX-}$(run '"${APP_HOME}/${APP_NAME}" -v' | sed -n -E 's/.* V(ersion)? ([^\t ]+).*/\2/p')"
+  - APP_DATE="${PREFIX-}$(run 'stat -L -c %y "${APP_HOME}/${APP_NAME}"' | cut -d ' ' -f 1)"
+  - RELEASE_DATE="${PREFIX-}$(run 'cat ${APP_HOME}/.release_date' | cut -d ' ' -f 1)"
+  - BUILD_ID="$(date -u +%Y%m%d_%H%M%S)-${IMAGE_REVISION:-${CI_COMMIT_SHORT_SHA}}-$(od -An -N5 -tu4 </dev/urandom | tr -d ' ' | head -c8)"
+
+  - mkdir -p tags
+  - echo >tags/app_version "${IMAGE_NAME}:v${APP_VERSION}"
+  - echo >tags/app_date "${IMAGE_NAME}:${APP_DATE}"
+  - echo >tags/build_id "${IMAGE_NAME}:b${BUILD_ID}"
+  - test "${APP_DATE}" = "${RELEASE_DATE}" || echo >tags/release_date "${IMAGE_NAME}:r${RELEASE_DATE}"
+
+  - oci='org.opencontainers.image'
+  - mkdir -p labels
+  - echo >"labels/${oci}.version"  "${oci}.version=${APP_VERSION}"
