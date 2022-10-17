@@ -14,8 +14,8 @@ run_matrix_build:
   stage: post_checkout
   trigger:
     include:
-    # required due to https://gitlab.com/gitlab-org/gitlab/-/issues/219342
-    - remote: 'https://github.com/git-developer/solarview-base/raw/feature/buster/.build.yml'
+    - project: 'ckware/solarview-base'
+      file:    '.build-yml'
     forward:
       pipeline_variables: true
   parallel:
