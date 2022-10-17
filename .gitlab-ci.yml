@@ -24,5 +24,7 @@ run_matrix_build:
         IMAGE_PLATFORMS:    "linux/amd64,linux/i386,linux/arm64,linux/arm/v7,linux/arm/v6"
       - RUNTIME_BASE_IMAGE: "debian:buster-slim"
         IMAGE_PLATFORMS:    "linux/amd64,linux/i386,linux/arm64,linux/arm/v7"
+        QUALIFIER:          "buster"
       - RUNTIME_BASE_IMAGE: "debian:buster-20220801-slim"
         IMAGE_PLATFORMS:    "linux/arm/v6"
+        QUALIFIER:          "buster-20220801"
