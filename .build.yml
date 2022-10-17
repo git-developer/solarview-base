@@ -33,7 +33,7 @@ read_application_tags:
   - APP_VERSION="$(run '"${APP_HOME}/${APP_NAME}" -v' | sed -n -E 's/.* V(ersion)? ([^\t ]+).*/\2/p')${QUALIFIER:+-${QUALIFIER}}"
   - APP_DATE="$(run 'stat -L -c %y "${APP_HOME}/${APP_NAME}"' | cut -d ' ' -f 1)${QUALIFIER:+-${QUALIFIER}}"
   - RELEASE_DATE="$(run 'cat ${APP_HOME}/.release_date' | cut -d ' ' -f 1)${QUALIFIER:+-${QUALIFIER}}"
-  - BUILD_ID="$(date -u +%Y%m%d_%H%M%S)-${IMAGE_REVISION:-${CI_COMMIT_SHORT_SHA}}-$(od -An -N5 -tu4 </dev/urandom | tr -d ' ' | head -c8)"
+  - BUILD_ID="$(date -u +%Y%m%d_%H%M%S)-${IMAGE_REVISION:-${CI_COMMIT_SHORT_SHA}}-${CI_JOB_ID}"
 
   - mkdir -p tags
   - echo >tags/app_version "${IMAGE_NAME}:v${APP_VERSION}"
