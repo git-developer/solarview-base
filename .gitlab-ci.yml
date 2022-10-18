@@ -13,7 +13,9 @@ run_matrix_build:
   extends: .docker_support:.build_job
   stage: post_checkout
   trigger:
-    include: .build.yml
+    include:
+    - project: 'ckware/solarview-base'
+      file:    '.build.yml'
     forward:
       pipeline_variables: true
   parallel:
