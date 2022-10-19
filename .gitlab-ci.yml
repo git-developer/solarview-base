@@ -15,7 +15,11 @@ run_matrix_build:
   extends: .docker_support:.build_job
   stage: post_checkout
   trigger:
-    include: ".build.yml"
+    include:
+    # simpler 'local: .build.yml' requires https://gitlab.com/gitlab-org/gitlab/-/issues/219342
+    - project: ckware/solarview-base
+      ref: $CI_COMMIT_REF_NAME
+      file: .build.yml
     forward:
       pipeline_variables: true
   parallel:
