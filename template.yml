@@ -19,7 +19,7 @@ run_matrix_build:
     # simpler 'local: .build.yml' requires https://gitlab.com/gitlab-org/gitlab/-/issues/219342
     - project: $CI_PROJECT_PATH
       ref: $CI_COMMIT_REF_NAME
-      file: .build.yml
+      file: build.yml
     forward:
       pipeline_variables: true
   parallel:
