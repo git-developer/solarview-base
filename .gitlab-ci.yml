@@ -1,5 +1,7 @@
 include:
-  remote: "https://github.com/git-developer/docker-support/raw/v3.3.1/gitlab-ci/docker-support.yml"
+- project: ckware/docker-support
+  ref: feature/gitlab-ci
+  file: gitlab-ci/docker-support.yml
 
 stages:
 - post_checkout
@@ -13,9 +15,7 @@ run_matrix_build:
   extends: .docker_support:.build_job
   stage: post_checkout
   trigger:
-    include:
-    - project: 'ckware/solarview-base'
-      file:    '.build.yml'
+    include: ".build.yml"
     forward:
       pipeline_variables: true
   parallel:
