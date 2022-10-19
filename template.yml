@@ -18,6 +18,7 @@ run_matrix_build:
     include:
     # simpler 'local: .build.yml' requires https://gitlab.com/gitlab-org/gitlab/-/issues/219342
     - project: ckware/solarview-base
+      ref: feature/buster
       file: build.yml
     forward:
       pipeline_variables: true
