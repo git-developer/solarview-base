@@ -17,7 +17,7 @@ run_matrix_build:
   trigger:
     include:
     # simpler 'local: .build.yml' requires https://gitlab.com/gitlab-org/gitlab/-/issues/219342
-    - project: ckware/solarview-base
+    - project: $CI_PROJECT_PATH
       ref: $CI_COMMIT_REF_NAME
       file: .build.yml
     forward:
