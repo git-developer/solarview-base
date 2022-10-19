@@ -3,6 +3,9 @@ include:
   ref: feature/gitlab-ci
   file: gitlab-ci/docker-support.yml
 
+variables:
+  BUILD_CONTEXT: image
+
 stages:
 - post_checkout
 
