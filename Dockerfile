@@ -6,12 +6,7 @@
 # The second image prepares runtime dependencies and defines the start command.
 #
 
-# 'buster' is preferred over 'stable' because bullseye requires at least
-# libseccomp 2.4.2 on the host; for details, see
-#   https://github.com/debuerreotype/docker-debian-artifacts/issues/106#issuecomment-721887305
-# 'buster-20220801-slim' is the latest slim buster for arm/v5; for details, see
-#   https://github.com/debuerreotype/docker-debian-artifacts/issues/170
-ARG RUNTIME_BASE_IMAGE=debian:buster-20220801-slim
+ARG RUNTIME_BASE_IMAGE=debian:stable-slim
 # builder image, prepares the runtime image
 FROM alpine AS builder
 ARG TARGETARCH
